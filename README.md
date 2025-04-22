@@ -1,34 +1,20 @@
-# TP3: Crear Lista Ordenada Genérica
+# 1er Examen Parcial
 
-## Objetivo
-Aprender a desarrollar estructuras de datos reutilizables.
+> El día viernes se realizará el examen parcial de la materia Programación 3.
 
-## Tarea
+El examen será de tipo multiple choice, con 60 preguntas a responder en 1 hora.
 
-Se debe crear una clase `ListaOrdenada` que permita agregar un elemento, verificar si contiene un elemento y eliminar un elemento.  
+Debera tener 50 preguntas correctas para aprobar.
 
-Además, se deben poder leer los elementos según su posición ([]) y determinar cuántos elementos componen la lista.  
+El examen se tomara en linea durante la clase utilizando el celular o la computadora.
 
-Por último, se debe poder filtrar todos los elementos que cumplan una condición.
 
-Funciones:
-- `Contiene(elemento)` : Indica si el elemento existe en la lista
-- `Agregar(elemento)` : Agrega un elemento manteniendo la lista ordenada (si esta repetido ignorar)
-- `Eliminar(elemento)` : Elimina un elmento de la lista (si no existe ignorar)
-- `Cantidad`: Indica la cantidad de elementos que hay en la lista.
-- `Lista[indice]`: Me retornar el elemento que esta en la posicion indicada por el indice.
-- `Filtrar(condicion)` : Me da una nueva lista ordenada con todos los elemento que cumpla la condicion.
+Pueden practicar las preguntas descargando la última versión del repositorio de GitHub, yendo a la carpeta `/examen` y luego ejecutando `dotnet script examen.cs`.
 
-Ademas debe crear la clase `Contacto` con `Nombre` y `Telefono` que debe mantenerse ordenanda alfabeticamente.
+El sistema solicitará su legajo y le ofrecerá una serie de 10 preguntas para responder.
 
-## Presentación
+Si responde correctamente todas las preguntas, el sistema le entregará un código. Si comparte dicho código en el grupo de WhatsApp de la materia, recibirá un crédito extra en el examen.
 
-El trabajo consiste en implementar las clases `ListaOrdenada` y `Contacto` para que se ejecuten todas las pruebas sin errores.  
+Por cada crédito que consiga, se le perdonará una respuesta incorrecta. 
 
-No se debe crear ninguna interfaz de usuario; únicamente se deberán pasar los test exitosamente.
-
-Solo debe modificar el archivo `ejercicio.cs` de la carpeta `tp3` y solo debe subir dicho archivo. 
-
-## Plazo de entrega
-
-> Viernes 11 de abril hasta las 23:59 hs
+Puede repetir este proceso tantas veces como desee.
