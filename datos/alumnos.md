@@ -7,7 +7,7 @@
 04.  61118  Barrios, Santiago Alexis                  (381) 526-8193        16 +++              58
 05.  61319  Carabajal, José Gabriel                   (381) 319-2680        13 +++               0
 06.  61214  Collazos Cortez, Máximo Alberto           (381) 350-5275        15 +++               0
-07.  61141  Di Clemente, María Antonela               (381) 398-3935        13 ++                0
+07.  61141  Di Clemente, María Antonela               (381) 398-3935        13 +++               0
 08.  61730  Diaz, Antonio                             (381) 392-6461         3                   0
 09.  61626  Diaz Londero, Sergio Gonzalo              (381) 604-6547        16 +++              58
 10.  61271  Donelli, Gerardo Exequiel                 (381) 514-3223        15 +++              58
