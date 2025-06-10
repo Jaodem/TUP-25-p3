@@ -28,6 +28,39 @@ app.MapGet("/", () => "Servidor API está en funcionamiento");
 // Ejemplo de endpoint de API
 app.MapGet("/api/datos", () => new { Mensaje = "Datos desde el servidor", Fecha = DateTime.Now });
 
+// Endpoint busqueda con query
+app.MapGet("/productos", async (TiendaContext db, string? buscar) =>
+{
+    var query = db.Productos.AsQueryable();
+
+    if (!string.IsNullOrEmpty(buscar))
+    {
+        query = query.Where(p => p.Nombre.Contains(buscar) || p.Descripcion.Contains(buscar));
+    }
+
+    var productos = await query.ToListAsync();
+    return Results.Ok(productos);
+});
+
+// Endpoint para crear un nuevo carrito de compras
+app.MapPost("/carritos", async (TiendaContext db) =>
+{
+    var nuevaCompra = new Compra
+    {
+        Fecha = DateTime.now,
+        Total = 0,
+        NombreCliente = "",
+        ApellidoCliente = "",
+        EmailCliente = "",
+        Items = new List<ItemCompra>()
+    };
+
+    db.Compras.Add(nuevaCompra);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/carritos/{nuevaCompra.Id}", new { nuevaCompra.Id });
+});
+
 app.Run();
 
 class Producto
