@@ -61,6 +61,43 @@ app.MapPost("/carritos", async (TiendaContext db) =>
     return Results.Created($"/carritos/{nuevaCompra.Id}", new { nuevaCompra.Id });
 });
 
+// Endpoint para obtener los ítems de un carrito específico
+app.MapGet("/carritos/{carritoId:int}", async (int carritoId, TiendaContext db) =>
+{
+    var compra = await db.Compras
+        .Include(c => c.Items)
+        .ThenInclude(item => item.Producto)
+        .FirstOrDefaultAsync(c => c.Id == carritoId);
+
+    if (compra == null) return Results.NotFound("Carrito no encontrado.");
+
+    var respuesta = compra.Items.Select(item => new
+    {
+        ProductoId = item.ProductoId,
+        NombreProducto = item.Producto.Nombre,
+        PrecioUnitario = item.PrecioUnitario,
+        Cantidad = item.Cantidad,
+        Subtotal = item.Cantidad * item.PrecioUnitario
+    });
+
+    return Results.Ok(respuesta);
+});
+
+// Endpoint para vaciar un carrito de compras, por ID
+app.MapDelete("/carritos/{carritoId:int}", async (int carritoId, TiendaContext db) =>
+{
+    var compra = await db.Compras
+        .Include(c => c.Items)
+        .FirstOrDefaultAsync(c => c.Id == carritoId);
+
+    if (compra == null) return Results.NotFound("Carrito no encontrado.");
+
+    db.ItemsCompra.RemoveRange(compra.Items);
+    await db.SaveChangesAsync();
+
+    return Results.Ok("Carrito vaciado exitosamente.");
+});
+
 app.Run();
 
 class Producto
