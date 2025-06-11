@@ -160,6 +160,59 @@ app.MapPut("/carritos{carritoId:int}/confirmar", async (int carritoId, ClienteDT
 });
 
 // Endpoint para agregar un producto al carrito (o actualizar la cantidad)
+app.MapPut("/carritos/{carritoId:int}/{productoId:int}", async (int carritoId, int productoId, ItemCantidadDTO data, TiendaContext db) =>
+{
+    if (data.Cantidad <= 0) return Results.BadRequest("La cantidad debe ser mayor a cero");
+
+    var carrito = await db.Compras
+        .Include(c => c.Items)
+        .FirstOrDefaultAsync(c => c.Id = carritoId);
+
+    if (carrito == null) return Results.NotFound("Carrito no encontrado.");
+
+    var producto = await db.Productos.FindAsync(productoId);
+    if (producto == null) return Results.NotFound("Producto no encontrado.");
+
+    var item = carrito.Items.FirstOrDefault(i => i.ProductoId == productoId);
+
+    int cantidadTotal = (item?.Cantidad ?? 0) + data.Cantidad;
+    if (cantidadTotal > producto.Stock) return Results.BadRequest("Stock insuficiente.");
+
+    if (item != null)
+    {
+        item.Cantidad += data.Cantidad;
+    }
+    else
+    {
+        carrito.Items.Add(new ItemCompra
+        {
+            ProductoId = productoId,
+            Cantidad = data.Cantidad
+        });
+    }
+
+    await db.SaveChangesAsync();
+    return Results.Ok("Producto agregado o actualizado en el carrito.");
+});
+
+// Endpoint para eliminar un producto del carrito (o actualizar la cantidad)
+app.MapDelete("/carritos/{carritoId:int}/{productoId:int}", async (int carritoId, int productoId, TiendaContext db) =>
+{
+    var carrito = await db.Compras
+        .Include(c => c.Items)
+        .FirstOrDefaultAsync(c => c.Id == carritoId);
+
+    if (carrito == null) return Results.NotFound("Carrito no encontrado.");
+
+    var item = carrito.Items.FirstOrDefault(i => i.ProductoId == productoId);
+    if (item == null) return Results.NotFound("Producto no encontrado en el carrito.");
+
+    if (item.Cantidad > 1) item.Cantidad--;
+    else db.ItemsCompra.Remove(item);
+
+    await db.SaveChangesAsync();
+    return Results.Ok("Producto eliminado o cantidad actualizada en el carrito.");
+});
 
 app.Run();
 
