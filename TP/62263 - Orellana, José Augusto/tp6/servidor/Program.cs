@@ -67,7 +67,11 @@ app.MapGet("/productos", async (TiendaContext db, string? buscar) =>
 
     if (!string.IsNullOrEmpty(buscar))
     {
-        query = query.Where(p => p.Nombre.Contains(buscar) || p.Descripcion.Contains(buscar));
+        var textoBusqueda = buscar.ToLower();
+
+        query = query.Where(p =>
+            p.Nombre.ToLower().Contains(textoBusqueda) ||
+            p.Descripcion.ToLower().Contains(textoBusqueda));
     }
 
     var productos = await query.ToListAsync();
@@ -79,7 +83,7 @@ app.MapPost("/carritos", async (TiendaContext db) =>
 {
     var nuevaCompra = new Compra
     {
-        Fecha = DateTime.now,
+        Fecha = DateTime.Now,
         Total = 0,
         NombreCliente = "",
         ApellidoCliente = "",
@@ -122,23 +126,23 @@ app.MapDelete("/carritos/{carritoId:int}", async (int carritoId, TiendaContext d
         .Include(c => c.Items)
         .FirstOrDefaultAsync(c => c.Id == carritoId);
 
-    if (compra == null) return Results.NotFound("Carrito no encontrado.");
+    if (compra == null) return Results.NotFound("Carrito no encontrado");
 
     db.ItemsCompra.RemoveRange(compra.Items);
     await db.SaveChangesAsync();
 
-    return Results.Ok("Carrito vaciado exitosamente.");
+    return Results.Ok("Carrito vaciado exitosamente");
 });
 
-// Endpoint para confirmar un carrito de compras
-app.MapPut("/carritos{carritoId:int}/confirmar", async (int carritoId, ClienteDTO cliente, TiendaContext db) =>
+// Endpoint para confirmar una carrito de compras
+app.MapPut("/carritos/{carritoId}/confirmar", async (int carritoId, ClienteDTO cliente, TiendaContext db) =>
 {
-    // Validar campos obligatorios
+    // Validar campos del cliente
     if (string.IsNullOrWhiteSpace(cliente.Nombre) ||
         string.IsNullOrWhiteSpace(cliente.Apellido) ||
         string.IsNullOrWhiteSpace(cliente.Email))
     {
-        return Results.BadRequest("Todos los campos del cliente son obligatorios.");
+        return Results.BadRequest("Todos los campos del cliente son obligatorios");    
     }
 
     // Validar formato de email
@@ -160,10 +164,10 @@ app.MapPut("/carritos{carritoId:int}/confirmar", async (int carritoId, ClienteDT
         return Results.BadRequest("Este carrito ya fue confirmado anteriormente");
     }
 
-    foreach (ver item in compra.Items)
-    {
-        if (item.Cantidad > item.Producto.Stock) return Results.BadRequest($"No hay stock suficiente para el producto {item.Producto.Nombre}");
-    }
+    foreach (var item in compra.Items)
+        {
+            if (item.Cantidad > item.Producto.Stock) return Results.BadRequest($"No hay stock suficiente para el producto {item.Producto.Nombre}");
+        }
 
     // Actualizar stock de productos y calcular total
     decimal total = 0;
@@ -187,44 +191,46 @@ app.MapPut("/carritos{carritoId:int}/confirmar", async (int carritoId, ClienteDT
         compra.Id,
         compra.Total,
         Fecha = compra.Fecha.ToString("dd/MM/yyyy HH:mm"),
-        Cliente = new { compra.NombreCliente, compra.ApellidoCliente, compra.EmailCliente }
+        Cliente = new {compra.NombreCliente, compra.ApellidoCliente, compra.EmailCliente}
     });
 });
 
-// Endpoint para agregar un producto al carrito (o actualizar la cantidad)
+// Endpoint para agregar un producto al carrito (o actualizar la cantidad).
 app.MapPut("/carritos/{carritoId:int}/{productoId:int}", async (int carritoId, int productoId, ItemCantidadDTO data, TiendaContext db) =>
 {
     if (data.Cantidad <= 0) return Results.BadRequest("La cantidad debe ser mayor a cero");
 
     var carrito = await db.Compras
         .Include(c => c.Items)
-        .FirstOrDefaultAsync(c => c.Id = carritoId);
+        .FirstOrDefaultAsync(c => c.Id == carritoId);
 
-    if (carrito == null) return Results.NotFound("Carrito no encontrado.");
+    if (carrito == null) return Results.NotFound("Carrito no encontrado");
 
     var producto = await db.Productos.FindAsync(productoId);
-    if (producto == null) return Results.NotFound("Producto no encontrado.");
+    if (producto == null) return Results.NotFound("Producto no encontrado");
 
     var item = carrito.Items.FirstOrDefault(i => i.ProductoId == productoId);
 
     int cantidadTotal = (item?.Cantidad ?? 0) + data.Cantidad;
-    if (cantidadTotal > producto.Stock) return Results.BadRequest("Stock insuficiente.");
+    if (cantidadTotal > producto.Stock) return Results.BadRequest("Stock insuficiente");
 
     if (item != null)
     {
         item.Cantidad += data.Cantidad;
+        item.PrecioUnitario = producto.Precio; // Actualizar precio unitario
     }
     else
     {
         carrito.Items.Add(new ItemCompra
         {
             ProductoId = productoId,
-            Cantidad = data.Cantidad
+            Cantidad = data.Cantidad,
+            PrecioUnitario = producto.Precio
         });
     }
 
     await db.SaveChangesAsync();
-    return Results.Ok("Producto agregado o actualizado en el carrito.");
+    return Results.Ok("Producto agregado o actualizado en el carrito");
 });
 
 // Endpoint para eliminar un producto del carrito (o actualizar la cantidad)
@@ -257,7 +263,7 @@ class Producto
     public int Stock { get; set; }
     public string ImageUrl { get; set; } = null!;
 
-    public List<ItemCompra> ItmsCompra { get; set; } = new(); // Relación uno a muchos
+    public List<ItemCompra> ItemsCompra { get; set; } = new (); // Relación uno a muchos
 }
 
 class Compra
@@ -270,7 +276,7 @@ class Compra
     public string ApellidoCliente { get; set; } = null!;
     public string EmailCliente { get; set; } = null!;
 
-    public List<ItemCompra> Items { get; set; } = new(); // Relación uno a muchos
+    public List<ItemCompra> Items { get; set; } = new (); // Relación uno a muchos
 }
 
 class ItemCompra
@@ -278,10 +284,10 @@ class ItemCompra
     public int Id { get; set; }
 
     public int ProductoId { get; set; }
-    public Producto producto { get; set; } = null!;
+    public Producto Producto { get; set; } = null!;
 
     public int CompraId { get; set; }
-    public Compra compra { get; set; } = null!;
+    public Compra Compra { get; set; } = null!;
 
     public int Cantidad { get; set; }
     public decimal PrecioUnitario { get; set; }
