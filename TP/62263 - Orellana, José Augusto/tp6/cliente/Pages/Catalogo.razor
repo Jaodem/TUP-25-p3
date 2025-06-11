@@ -1,0 +1,50 @@
+@page "/catalogo"
+@inject HttpClient Http
+
+<h3>Catálogo de Productos</h3>
+
+@if (productos == null)
+{
+    <p>Cargando productos...</p>
+}
+else if (!productos.Any())
+{
+    <p>No se encontraron productos.</p>
+}
+else
+{
+    <div class="productos">
+        @foreach (var p in productos)
+        {
+            <div class="producto">
+                <img src="@p.imageUrl" alt="@p.nombre" width="150" />
+                <h4>@p.nombre</h4>
+                <p>@p.descripcion</p>
+                <p><strong>Precio:</strong> $@p.precio</p>
+                <p><strong>Stock:</strong> @p.stock</p>
+                <button disabled="@(!PuedeAgregar(p))">Agregar al carrito</button>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    List<ProductoDTO>? productos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await Http.GetFromJsonAsync<List<ProductoDTO>>("http://localhost:5184/productos");
+    }
+
+    bool PuedeAgregar(ProductoDTO p) => p.stock > 0;
+
+    public class ProductoDTO
+    {
+        public int id { get; set; }
+        public string nombre { get; set; } = "";
+        public string descripcion { get; set; } = "";
+        public decimal precio { get; set; }
+        public int stock { get; set; }
+        public string imageUrl { get; set; } = "";
+    }
+}
