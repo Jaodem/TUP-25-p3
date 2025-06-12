@@ -1,5 +1,6 @@
 @page "/catalogo"
 @inject HttpClient Http
+@inject CarritoService Carrito
 
 <h3>Catálogo de Productos</h3>
 
@@ -22,19 +23,59 @@ else
                 <p>@p.descripcion</p>
                 <p><strong>Precio:</strong> $@p.precio</p>
                 <p><strong>Stock:</strong> @p.stock</p>
-                <button disabled="@(!PuedeAgregar(p))">Agregar al carrito</button>
+                <button @onclick="() => Agregar(p.id)" disabled="@(!PuedeAgregar(p))">Agregar al carrito</button>
             </div>
         }
     </div>
 }
 
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="mensaje-exito">@mensaje</div>
+}
+
 @code {
     List<ProductoDTO>? productos;
+    string mensaje = "";
+    CancellationTokenSource? cts; // Para controlar los mensajes al cargar productos al carrito
 
     protected override async Task OnInitializedAsync()
     {
+        await Carrito.InicializarCarritoAsync();
         productos = await Http.GetFromJsonAsync<List<ProductoDTO>>("http://localhost:5184/productos");
     }
+
+    async Task Agregar(int id)
+    {
+        // Cancelar y borrar cualquier mensaje anterior
+        cts?.Cancel();
+        mensaje = "";
+        StateHasChanged(); // Se fuerza el borrado del mensaje en pantalla
+        await Task.Delay(50); // Pausa breve para que se haga visible el cambio
+
+        // Se crea una nueva fuente de cancelación para el mensaje
+        cts = new CancellationTokenSource();
+
+        // Agregar producto
+        var ok = await Carrito.AgregarProducto(id);
+        mensaje = ok ? "Producto agregado al carrito." : "No se pudo agregar el producto.";
+        StateHasChanged(); // Para mostrar el mensaje
+
+        try
+        {
+
+            // Esperar 2 segundos antes de borrar mensaje, a menos que se cancele antes
+            await Task.Delay(2000, cts.Token);
+            mensaje = "";
+            StateHasChanged();
+        }
+        catch (TaskCanceledException)
+        {
+            // No hace nada si fue cancelado por otro click
+        }
+
+    }
+
 
     bool PuedeAgregar(ProductoDTO p) => p.stock > 0;
 
