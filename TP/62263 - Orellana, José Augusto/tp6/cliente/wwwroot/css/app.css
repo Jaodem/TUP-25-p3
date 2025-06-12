@@ -131,11 +131,13 @@ code {
 .mensaje-exito {
     position: fixed;
     top: 1rem;
-    right: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: #dff0d8;
     color: #3c763d;
-    padding: 1rem;
+    padding: 0.5rem 2rem;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px #aaa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    font-weight: bold;
 }

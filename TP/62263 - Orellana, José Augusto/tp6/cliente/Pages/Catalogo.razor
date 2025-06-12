@@ -59,6 +59,7 @@ else
         // Agregar producto
         var ok = await Carrito.AgregarProducto(id);
         mensaje = ok ? "Producto agregado al carrito." : "No se pudo agregar el producto.";
+
         StateHasChanged(); // Para mostrar el mensaje
 
         try

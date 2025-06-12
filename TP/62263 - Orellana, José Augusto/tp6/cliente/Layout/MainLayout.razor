@@ -1,4 +1,50 @@
 ﻿@inherits LayoutComponentBase
+@inject CarritoService CarritoService
+@implements IDisposable
+
+<div class="header" style="background-color: #f0f0f0; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+    <a href="/catalogo" style="text-decoration: none; color: inherit;">
+        🏠 Catálogo
+    </a>
+
+    <a href="/carrito" style="position: relative; text-decoration: none; color: inherit;">
+        🛒 Carrito
+        @if (CarritoService.CantidadTotal > 0)
+        {
+            <span style="
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                background: red;
+                color: white;
+                border-radius: 50%;
+                padding: 2px 6px;
+                font-size: 12px;">
+                @CarritoService.CantidadTotal
+            </span>
+        }
+    </a>
+
+</div>
+
 <div class="page">
     @Body
 </div>
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        CarritoService.OnCambio += Actualizar;
+    }
+
+    private void Actualizar()
+    {
+        InvokeAsync(StateHasChanged); // Fuerza que el layout se renderice de nuevo
+    }
+
+    public void Dispose()
+    {
+        CarritoService.OnCambio -= Actualizar; // Evita suscripción duplicada
+    }
+}
