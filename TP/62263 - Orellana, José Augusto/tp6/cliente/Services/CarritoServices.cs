@@ -5,6 +5,12 @@ public class CarritoService
     private readonly HttpClient _http;
     public int? CarritoId { get; private set; }
 
+    public int CantidadTotal { get; private set; } = 0;
+
+    // Notificador de cambio para que el layout se actualice
+    public event Action? OnCambio;
+    private void NotificarCambio() => OnCambio?.Invoke();
+
     public CarritoService(HttpClient http)
     {
         _http = http;
@@ -25,12 +31,52 @@ public class CarritoService
 
     public async Task<bool> AgregarProducto(int productoId)
     {
-        if (CarritoId == null)
-            return false;
+        if (CarritoId == null) return false;
 
         var resultado = await _http.PutAsJsonAsync($"http://localhost:5184/carritos/{CarritoId}/{productoId}", new { Cantidad = 1 });
+
+        if (resultado.IsSuccessStatusCode)
+        {
+            // Se aumenta el contador al agregar un producto
+            CantidadTotal++;
+            NotificarCambio(); // Para que se refleje la actualización de la cantidad de productos en el carrito
+        }
+
         return resultado.IsSuccessStatusCode;
     }
+
+    public async Task<bool> EliminarUnidad(int productoId)
+    {
+        if (CarritoId == null) return false;
+
+        var resultado = await _http.DeleteAsync(
+            $"http://localhost:5184/carritos/{CarritoId}/{productoId}");
+
+        if (resultado.IsSuccessStatusCode)
+        {
+            CantidadTotal = Math.Max(0, CantidadTotal - 1);
+            NotificarCambio();
+        }
+
+        return resultado.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> VaciarCarrito()
+    {
+        if (CarritoId == null) return false;
+
+        var respuesta = await _http.DeleteAsync(
+            $"http://localhost:5184/carritos/{CarritoId}");
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            CantidadTotal = 0;
+            NotificarCambio(); // ✅ actualizar layout
+        }
+
+        return respuesta.IsSuccessStatusCode;
+    }
+
 
     private class RespuestaCarrito
     {
