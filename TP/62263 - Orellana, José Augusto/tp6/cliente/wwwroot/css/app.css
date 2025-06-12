@@ -141,3 +141,57 @@ code {
     z-index: 1000;
     font-weight: bold;
 }
+
+/* Estilos para el carrito */
+.carrito-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.carrito-table th,
+.carrito-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.carrito-table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+.carrito-total-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 1rem;
+    margin-left: 2rem;
+    gap: 0.6rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+
+}
+
+.carrito-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+.carrito-boton {
+    padding: 0.6rem 1.4rem;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.carrito-boton:hover {
+    background-color: #ddd;
+}

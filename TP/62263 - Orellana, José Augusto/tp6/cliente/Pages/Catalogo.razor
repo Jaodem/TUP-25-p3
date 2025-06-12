@@ -18,7 +18,7 @@ else
         @foreach (var p in productos)
         {
             <div class="producto">
-                <img src="@p.imageUrl" alt="@p.nombre" width="150" />
+                <img src="@p.imagenUrl" alt="@p.nombre" width="150" />
                 <h4>@p.nombre</h4>
                 <p>@p.descripcion</p>
                 <p><strong>Precio:</strong> $@p.precio</p>
@@ -87,6 +87,6 @@ else
         public string descripcion { get; set; } = "";
         public decimal precio { get; set; }
         public int stock { get; set; }
-        public string imageUrl { get; set; } = "";
+        public string imagenUrl { get; set; } = "";
     }
 }
