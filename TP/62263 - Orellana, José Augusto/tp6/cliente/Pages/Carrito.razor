@@ -7,11 +7,11 @@
 
 @if (items == null)
 {
-    <p>Cargando carrito...</p>
+    <div class="mensaje-centrado">Cargando carrito...</div>
 }
 else if (!items.Any())
 {
-    <p>El carrito está vacío.</p>
+    <div class="mensaje-centrado mensaje-vacio">El carrito está vacío.</div>
 }
 else
 {
@@ -28,9 +28,11 @@ else
             @foreach (var item in items)
             {
                 <tr>
-                    <td style="display: flex; align-items: center;">
-                        @item.nombreProducto
-                        <img src="@item.imagenUrl" alt="imagen" style="width: 50px; height: 50px; object-fit: cover; margin-left: 1rem;" />
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <img src="@item.imagenUrl" style="width: 50px; height: 50px; object-fit: cover;" />
+                            @item.nombreProducto
+                        </div>
                     </td>
                     <td>$@item.precioUnitario.ToString("F2")</td>
                     <td>

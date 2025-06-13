@@ -113,6 +113,45 @@ code {
     text-align: start;
 }
 
+/* Estilos del nav */
+.header {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.7rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #e0e0e0;
+}
+
+.carrito-link {
+    position: relative;
+}
+
+.carrito-cantidad {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
 /* Estilos del catálogo */
 .productos {
     display: flex;
@@ -140,6 +179,67 @@ code {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     font-weight: bold;
+}
+
+/* Estilos para los mensajes */
+.mensaje-centrado {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.mensaje-error {
+    color: #c0392b;
+}
+
+.mensaje-vacio {
+    color: #7f8c8d;
+}
+
+/* Estilos para el buscador */
+.buscador {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.buscador input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 300px;
+}
+
+.buscador button {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buscar {
+    background-color: #007bff;
+    color: white;
+}
+
+.buscar:hover {
+    background-color: #0056b3;
+}
+
+.limpiar {
+    background-color: #dc3545;
+    color: white;
+}
+
+.limpiar:hover {
+    background-color: #a71d2a;
 }
 
 /* Estilos para el carrito */

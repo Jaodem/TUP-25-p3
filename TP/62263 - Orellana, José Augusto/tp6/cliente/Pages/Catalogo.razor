@@ -2,15 +2,23 @@
 @inject HttpClient Http
 @inject CarritoService Carrito
 
-<h3>Catálogo de Productos</h3>
+<div class="contenedor">
+    <h3>Catálogo de productos</h3>
+    <div class="buscador">
+        <label for="busqueda">Buscar producto:</label>
+        <input id="busqueda" @bind="textoBusqueda" placeholder="Ej: celular, cargador..." />
+        <button @onclick="Buscar" class="buscar">Buscar</button>
+        <button @onclick="Limpiar" class="limpiar">Limpiar</button>
+    </div>
+</div>
 
 @if (productos == null)
 {
-    <p>Cargando productos...</p>
+    <p class="mensaje-centrado">Cargando productos...</p>
 }
 else if (!productos.Any())
 {
-    <p>No se encontraron productos.</p>
+    <p class="mensaje-centrado mensaje-vacio">No se encontraron productos.</p>
 }
 else
 {
@@ -42,7 +50,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await Carrito.InicializarCarritoAsync();
-        productos = await Http.GetFromJsonAsync<List<ProductoDTO>>("http://localhost:5184/productos");
+        await CargarProductos(textoBusqueda);
     }
 
     async Task Agregar(int id)
@@ -74,11 +82,29 @@ else
         {
             // No hace nada si fue cancelado por otro click
         }
-
     }
 
-
     bool PuedeAgregar(ProductoDTO p) => p.stock > 0;
+
+    async Task CargarProductos(string valorBuscado)
+    {
+        string url = "http://localhost:5184/productos";
+
+        if (!string.IsNullOrWhiteSpace(valorBuscado))
+            url += $"?buscar={Uri.EscapeDataString(valorBuscado)}";
+
+        productos = await Http.GetFromJsonAsync<List<ProductoDTO>>(url);
+    }
+
+    string textoBusqueda = "";
+
+    async Task Buscar() => await CargarProductos(textoBusqueda);
+
+    async Task Limpiar()
+    {
+        textoBusqueda = "";
+        await CargarProductos("");
+    }
 
     public class ProductoDTO
     {
