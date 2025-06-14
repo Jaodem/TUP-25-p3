@@ -77,6 +77,11 @@ public class CarritoService
         return respuesta.IsSuccessStatusCode;
     }
 
+    public void Vaciar()
+    {
+        CantidadTotal = 0;
+        OnCambio?.Invoke();
+    }
 
     private class RespuestaCarrito
     {
