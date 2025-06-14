@@ -62,8 +62,13 @@ else
         if (respuesta.IsSuccessStatusCode)
         {
             mensaje = "Compra confirmada exitosamente";
+            StateHasChanged();
             await Task.Delay(2000, cts.Token);
+
+            // Se limpia y se fuerza la eliminación del carrito
             CarritoService.Vaciar();
+            CarritoService.ResetearCarrito();
+
             Nav.NavigateTo("/catalogo");
         }
         else

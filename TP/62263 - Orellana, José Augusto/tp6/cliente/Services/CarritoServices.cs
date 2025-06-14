@@ -83,6 +83,13 @@ public class CarritoService
         OnCambio?.Invoke();
     }
 
+    public void ResetearCarrito()
+    {
+        CarritoId = null;
+        CantidadTotal = 0;
+        OnCambio?.Invoke(); // Para actualizar ícono del carrito en caso de ser necesario
+    }
+
     private class RespuestaCarrito
     {
         public int Id { get; set; }
