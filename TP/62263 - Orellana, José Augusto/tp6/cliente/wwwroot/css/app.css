@@ -302,7 +302,7 @@ code {
     justify-content: center;
     align-items: center;
     min-height: 80vh;
-    width: 100%; 
+    width: 100%;
 }
 
 .confirmar-formulario {
@@ -337,4 +337,78 @@ code {
 
 .boton-confirmar:hover {
     background-color: #218838;
+}
+
+/* Estilos para home */
+.contenedor-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 4rem;
+    text-align: center;
+    gap: 1.5rem;
+    min-height: 80vh;
+    width: 100%;
+}
+
+.titulo-home {
+    font-size: 2rem;
+    color: #333;
+}
+
+.descripcion-home {
+    max-width: 600px;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.botones-home {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.boton-home {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.boton-home:hover {
+    background-color: #0056b3;
+}
+
+.boton-home.secundario {
+    background-color: #6c757d;
+}
+
+.card-servidor {
+    background-color: #f8f9fa;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    max-width: 400px;
+}
+
+.mensaje-info, .mensaje-error {
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.mensaje-info {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+}
+
+.mensaje-error {
+    background-color: #f8d7da;
+    color: #842029;
 }
