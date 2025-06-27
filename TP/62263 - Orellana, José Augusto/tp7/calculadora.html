@@ -116,35 +116,99 @@
 
         function Calculadora(){
             // Poner aca el JavaScript
+            const [pantalla, setPantalla] = useState('0');
+            const [operacion, setOperacion] = useState('');
+            const [resultadoMostrado, setResultadoMostrado] = useState(false);
+
+            const esOperador = (valor) => ['+', '−', '×', '÷'].includes(valor);
+
+            const manejarClick = (valor) => {
+                if (valor === 'AC') {
+                    setPantalla('0');
+                    setOperacion('');
+                    resultadoMostrado(false);
+                    return;
+                }
+
+                if (valor === '+/-') {
+                    if (pantalla !== '0') {
+                        const nuevoValor = pantalla.startsWith('-') ? pantalla.slice(1) : '-' + pantalla;
+                        setPantalla(nuevoValor);
+                        setOperacion(nuevoValor);
+                    }
+                    return;
+                }
+
+                if (valor === '%') {
+                    const porcentaje = parseFloat(pantalla) / 100;
+                    setPantalla(porcentaje.toString());
+                    setOperacion(porcentaje.toString());
+                    return;
+                }
+
+                if (valor === '=') {
+                    try {
+                        const resultado = eval(operacion.replace(/÷/g, '/').replace(/×/g, '*').replace(/−/g, '-'));
+                        setPantalla(Number(resultado.toFixed(8)).toString());
+                        setOperacion('');
+                        setResultadoMostrado(true);
+                    } catch (e) {
+                        setPantalla('Error');
+                    }
+                    return;
+                }
+
+                // Si se acaba de mostrar un resultado y se presiona un número se reinicia
+                if (resultadoMostrado && !isNaN(valor)) {
+                    setPantalla(valor);
+                    setOperacion(valor);
+                    setResultadoMostrado(false);
+                    return;
+                }
+
+                // Evitar operadores seguidos
+                if (esOperador(valor) && esOperador(operacion.slice(-1))) {
+                    setOperacion(operacion.slice(0, -1) + valor);
+                    setPantalla(pantalla.slice(0, -1) + valor);
+                    return;
+                }
+
+                // Si todo va bien
+                const nuevaOperacion = operacion + valor;
+                setOperacion(nuevaOperacion);
+                setPantalla(pantalla === '0' && !isNaN(valor) ? valor : pantalla + valor);
+                setResultadoMostrado(false);
+            };
+
             return (
                 <div className="marco">
                     <div className="calculadora">
                         <div className="notch"></div>
-                        <div className="pantalla">0</div>
+                        <div className="pantalla">{pantalla.toString().slice(0, 10)}</div>
                         <div className="botones">
-                            <button className="boton gris">AC</button>
-                            <button className="boton gris">+/-</button>
-                            <button className="boton gris">%</button>
-                            <button className="boton naranja">÷</button>
+                            <button className="boton gris" onClick={() => manejarClick('AC')}>AC</button>
+                            <button className="boton gris" onClick={() => manejarClick('+/-')}>+/-</button>
+                            <button className="boton gris" onClick={() => manejarClick('%')}>%</button>
+                            <button className="boton naranja" onClick={() => manejarClick('÷')}>÷</button>
 
-                            <button className="boton">7</button>
-                            <button className="boton">8</button>
-                            <button className="boton">9</button>
-                            <button className="boton naranja">×</button>
+                            <button className="boton" onClick={() => manejarClick('7')}>7</button>
+                            <button className="boton" onClick={() => manejarClick('8')}>8</button>
+                            <button className="boton" onClick={() => manejarClick('9')}>9</button>
+                            <button className="boton naranja" onClick={() => manejarClick('×')}>×</button>
 
-                            <button className="boton">4</button>
-                            <button className="boton">5</button>
-                            <button className="boton">6</button>
-                            <button className="boton naranja">−</button>
+                            <button className="boton" onClick={() => manejarClick('4')}>4</button>
+                            <button className="boton" onClick={() => manejarClick('5')}>5</button>
+                            <button className="boton" onClick={() => manejarClick('6')}>6</button>
+                            <button className="boton naranja" onClick={() => manejarClick('−')}>−</button>
 
-                            <button className="boton">1</button>
-                            <button className="boton">2</button>
-                            <button className="boton">3</button>
-                            <button className="boton naranja">+</button>
+                            <button className="boton" onClick={() => manejarClick('1')}>1</button>
+                            <button className="boton" onClick={() => manejarClick('2')}>2</button>
+                            <button className="boton" onClick={() => manejarClick('3')}>3</button>
+                            <button className="boton naranja" onClick={() => manejarClick('+')}>+</button>
 
-                            <button className="boton ancho">0</button>
-                            <button className="boton">.</button>
-                            <button className="boton naranja">=</button>
+                            <button className="boton ancho" onClick={() => manejarClick('0')}>0</button>
+                            <button className="boton" onClick={() => manejarClick('.')}>.</button>
+                            <button className="boton naranja" onClick={() => manejarClick('=')}>=</button>
                         </div>
                     </div>
                 </div>
