@@ -7,6 +7,100 @@
 
     <style>
         /* Poner aca el CSS */
+        body {
+            background-color: #fcd9a3;;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Marco */
+        .marco {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            border: none;
+            position: relative;
+        }
+
+        /* Notch */
+        .notch {
+            width: 120px;
+            height: 20px;
+            background-color: #ffffff;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .calculadora {
+            background-color: black;
+            padding: 120px 20px 20px;
+            border-radius: 40px;
+            max-width: 320px;
+            /* box-shadow: 0 8px 20px rgba(0,0,0,0.4); */
+            position: relative;
+        }
+
+        .calculadora .pantalla {
+            margin-top: 40px;
+        }
+
+        .pantalla {
+            color: white;
+            font-size: 60px;
+            font-weight: 200;
+            text-align: right;
+            margin-bottom: 20px;
+            min-height: 80px;
+        }
+
+        .botones {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .boton {
+            aspect-ratio: 1/1;
+            height: 60px;
+            font-size: 28px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            background-color: #333333;
+            cursor: pointer;
+        }
+
+        .boton:active {
+            filter: brightness(1.2)
+        }
+
+        .boton.gris {
+            background-color: #a5a5a5;
+            color: black;
+        }
+
+        .boton.naranja {
+            background-color: orange;
+        }
+
+        .boton.ancho {
+            grid-column: span 2;
+            border-radius: 30px;
+            aspect-ratio: auto;
+            text-align: left;
+            padding-left: 22px;
+        }
     </style>
 </head>
 <body>
@@ -23,32 +117,35 @@
         function Calculadora(){
             // Poner aca el JavaScript
             return (
-                <div className="calculador">
-                    <div className="pantalla">0</div>
-                    <div className="botones">
-                        <button className="boton gris">AC</button>
-                        <button className="boton gris">+/-</button>
-                        <button className="boton gris">%</button>
-                        <button className="boton naranja">÷</button>
+                <div className="marco">
+                    <div className="calculadora">
+                        <div className="notch"></div>
+                        <div className="pantalla">0</div>
+                        <div className="botones">
+                            <button className="boton gris">AC</button>
+                            <button className="boton gris">+/-</button>
+                            <button className="boton gris">%</button>
+                            <button className="boton naranja">÷</button>
 
-                        <button className="boton">7</button>
-                        <button className="boton">8</button>
-                        <button className="boton">9</button>
-                        <button className="boton naranja">×</button>
+                            <button className="boton">7</button>
+                            <button className="boton">8</button>
+                            <button className="boton">9</button>
+                            <button className="boton naranja">×</button>
 
-                        <button className="boton">4</button>
-                        <button className="boton">5</button>
-                        <button className="boton">6</button>
-                        <button className="boton naranja">−</button>
+                            <button className="boton">4</button>
+                            <button className="boton">5</button>
+                            <button className="boton">6</button>
+                            <button className="boton naranja">−</button>
 
-                        <button className="boton">1</button>
-                        <button className="boton">2</button>
-                        <button className="boton">3</button>
-                        <button className="boton naranja">+</button>
+                            <button className="boton">1</button>
+                            <button className="boton">2</button>
+                            <button className="boton">3</button>
+                            <button className="boton naranja">+</button>
 
-                        <button className="boton ancho">0</button>
-                        <button className="boton">.</button>
-                        <button className="boton naranja">=</button>
+                            <button className="boton ancho">0</button>
+                            <button className="boton">.</button>
+                            <button className="boton naranja">=</button>
+                        </div>
                     </div>
                 </div>
             );
