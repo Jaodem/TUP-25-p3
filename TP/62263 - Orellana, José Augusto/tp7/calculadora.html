@@ -180,6 +180,36 @@
                 setResultadoMostrado(false);
             };
 
+            useEffect(() => {
+                const manejarTecla = (e) => {
+                    const tecla = e.key;
+
+                    if (!isNaN(tecla)) {
+                        manejarClick(tecla);
+                    } else if (['+', '-', '*', '/'].includes(tecla)) {
+                        const simbolo = tecla === '*' ? '×' : tecla === '/' ? '÷' : tecla === '-' ? '−' : tecla;
+                        manejarClick(simbolo);
+                    } else if (tecla === 'Enter') {
+                        manejarClick('=');
+                    } else if (tecla === 'Escape') {
+                        manejarClick('AC');
+                    } else if (tecla === '.') {
+                        manejarClick('.');
+                    } else if (tecla === 'Backspace') {
+                        setPantalla((prev) => {
+                            const nuevaPantalla = prev.length > 1 ? prev.slice(0, -1) : '0';
+                            setOperacion((prevOp) =>
+                                prevOp.length > 1 ? prevOp.slice(0, -1) : ''
+                            );
+                            return nuevaPantalla;
+                        });
+                    }
+                };
+
+                window.addEventListener('keydown', manejarTecla);
+                return () => window.removeEventListener('keydown', manejarTecla);
+            }, [pantalla, operacion]);
+
             return (
                 <div className="marco">
                     <div className="calculadora">
